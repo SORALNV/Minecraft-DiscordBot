@@ -2,37 +2,8 @@
 
 directory
 
-MinecraftServer/
 
-├─ （bluemap/）
-
-├─ config/
-
-├─ crash-reports/
-
-├─ defaultconfigs/
-
-├─ journeymap/
-
-├─ libraries/
-
-├─ logs/
-
-├─ mods/
-
-├─ world/
-
-└─ bots/
-
-   ├─botprogram.py
    
-   ├─.env
-   
-   ├─ <CLIENT_MODS>.zip
-   
-   ├─ requirements.txt  
-   
-   └─ README.md     
-
+<img width="402" height="680" alt="image" src="https://github.com/user-attachments/assets/91fffff6-f0d0-43e9-90e7-cde7db35fb66" />
    
    
