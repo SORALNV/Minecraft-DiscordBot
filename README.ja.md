@@ -6,6 +6,40 @@ Discord から Minecraft サーバーを操作・監視する Bot です。
 - English: `README.md`
 - 日本語: `README.ja.md`
 
+## BOTの機能
+- スラッシュコマンド `/control`（管理者のみ）: Minecraft のコントロールパネルを投稿します。
+- スラッシュコマンド `/mods`: `MODS_COMMAND` の設定で動作が切り替わります。
+- `MODS_COMMAND=false`: `/mods` を無効化します。
+- `MODS_COMMAND=direct`: `bots/<CLIENT_MODS>.zip` を送信します。
+- `MODS_COMMAND=url`: `MODS_URL` を送信します。
+- コントロールパネル `Status` ボタン: サーバーのオンライン状態、プレイヤー一覧、CPU使用率、メモリ使用率を表示します。
+- コントロールパネル `Set Morning` ボタン: RCON で `/time set 300t` と `/weather clear` を実行します。
+- コントロールパネル `Restart` ボタン: 事前チェック、確認UI、同時実行ロック、RCON `/stop`、`RESTART_COMMAND` 実行の順で安全に再起動します。
+- コントロールパネル `BlueMap` ボタン: `BLUEMAP_URL` が設定されている場合のみ表示します。
+- Bot のプレゼンスは60秒ごとに更新され、プレイヤー数または `Offline` を表示します。
+- `BOT_LOG_CHANNEL_ID` が設定されている場合、操作ログを送信します。
+- `.env` が無い場合は `start_bot.bat` から `setup_env.bat` を自動起動します。
+
+## 機能確認マトリクス
+| 機能 | かんたんな確認方法 | 必要な `.env` キー |
+|---|---|---|
+| `/control` コマンド | 管理者で `/control` を実行し、パネル投稿を確認 | `DISCORD_TOKEN`, `DISCORD_CHANNEL_ID` |
+| `Status` ボタン | `Status` を押し、サーバー・プレイヤー・システム情報を確認 | `RCON_HOST`, `MINECRAFT_PORT` |
+| `Set Morning` ボタン | `Set Morning` を押し、時間と天候の変更を確認 | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD` |
+| `Restart` ボタン | プレイヤー0人で `Restart` 実行、再起動を確認 | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD`, `RESTART_COMMAND` |
+| `/mods` 無効モード | `MODS_COMMAND=false` で `/mods` 実行、無効メッセージを確認 | `MODS_COMMAND` |
+| `/mods` direct モード | `MODS_COMMAND=direct` と `CLIENT_MODS` 設定、ZIP配置後に `/mods` 実行 | `MODS_COMMAND`, `CLIENT_MODS` |
+| `/mods` url モード | `MODS_COMMAND=url` と `MODS_URL` 設定後に `/mods` 実行 | `MODS_COMMAND`, `MODS_URL` |
+| BlueMap ボタン | `BLUEMAP_URL` を設定し `/control` 実行、BlueMap ボタン表示を確認 | `BLUEMAP_URL` |
+| 操作ログ送信 | `BOT_LOG_CHANNEL_ID` 設定後に操作し、ログ投稿を確認 | `BOT_LOG_CHANNEL_ID` |
+
+## クイック確認手順
+1. `setup_env.bat` を実行し、確認したい機能に必要な値を設定します。
+2. `start_bot.bat` で Bot を起動します。
+3. Discord で管理者として `/control` を実行します。
+4. `Status` を押して、サーバー状態を取得できることを確認します。
+5. 上のマトリクスに沿って、1機能ずつ確認します。
+
 ## ディレクトリ構成
 ```text
 <server_root>/

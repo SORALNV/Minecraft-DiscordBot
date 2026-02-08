@@ -6,6 +6,40 @@ Languages:
 - English: `README.md`
 - Japanese: `README.ja.md`
 
+## Bot Features
+- Slash command `/control` (admin only): posts the Minecraft control panel message.
+- Slash command `/mods`: behavior is selected by `MODS_COMMAND`.
+- `/mods=false`: command is disabled.
+- `/mods=direct`: sends `bots/<CLIENT_MODS>.zip`.
+- `/mods=url`: sends `MODS_URL`.
+- Control panel button `Status`: shows online/offline, player list, CPU usage, memory usage.
+- Control panel button `Set Morning`: sends RCON commands `/time set 300t` and `/weather clear`.
+- Control panel button `Restart`: safe restart flow with checks, confirmation UI, lock protection, RCON `/stop`, then `RESTART_COMMAND`.
+- Control panel button `BlueMap`: shown only when `BLUEMAP_URL` is set.
+- Bot presence updates every 60 seconds to player count or `Offline`.
+- Optional bot logs are sent to `BOT_LOG_CHANNEL_ID`.
+- `start_bot.bat` auto-starts `setup_env.bat` when `.env` is missing.
+
+## Feature Check Matrix
+| Feature | Quick verification | Required `.env` keys |
+|---|---|---|
+| `/control` command | Run `/control` as admin and confirm panel message is posted | `DISCORD_TOKEN`, `DISCORD_CHANNEL_ID` |
+| `Status` button | Press `Status` and confirm server/player/system info appears | `RCON_HOST`, `MINECRAFT_PORT` |
+| `Set Morning` button | Press `Set Morning` and confirm time/weather changed | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD` |
+| `Restart` button | Press `Restart` with zero players, confirm server restarts | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD`, `RESTART_COMMAND` |
+| `/mods` disabled mode | Set `MODS_COMMAND=false`, run `/mods`, confirm disabled message | `MODS_COMMAND` |
+| `/mods` direct mode | Set `MODS_COMMAND=direct`, set `CLIENT_MODS`, place zip, run `/mods` | `MODS_COMMAND`, `CLIENT_MODS` |
+| `/mods` URL mode | Set `MODS_COMMAND=url`, set `MODS_URL`, run `/mods` | `MODS_COMMAND`, `MODS_URL` |
+| BlueMap button | Set `BLUEMAP_URL`, run `/control`, confirm BlueMap button is shown | `BLUEMAP_URL` |
+| Bot operation logs | Set `BOT_LOG_CHANNEL_ID`, perform button action, confirm log message | `BOT_LOG_CHANNEL_ID` |
+
+## Quick Verification Steps
+1. Run `setup_env.bat` and set required values for the feature you want to test.
+2. Start bot with `start_bot.bat`.
+3. Run `/control` in Discord as admin.
+4. Press `Status` and confirm server status can be read.
+5. Test one feature at a time using the matrix above.
+
 ## Directory Layout
 ```text
 <server_root>/
