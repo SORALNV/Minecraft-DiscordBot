@@ -5,11 +5,14 @@ set "SCRIPT_DIR=%~dp0"
 set "ENV_FILE=%SCRIPT_DIR%.env"
 set "TMP_ENV_FILE=%SCRIPT_DIR%.env.tmp"
 if exist "%TMP_ENV_FILE%" del /q "%TMP_ENV_FILE%" >nul 2>nul
+set "ENV_MODE=create"
+if exist "%ENV_FILE%" set "ENV_MODE=update"
 
 echo.
 echo Minecraft Discord Bot .env Setup
 echo This tool creates or updates .env without using an editor.
 echo Target: %ENV_FILE%
+echo Mode: %ENV_MODE%
 echo.
 
 echo [1/5] Discord settings
@@ -111,7 +114,11 @@ if errorlevel 1 (
 )
 
 echo.
-echo Saved: %ENV_FILE%
+if /I "%ENV_MODE%"=="create" (
+    echo Created: %ENV_FILE%
+) else (
+    echo Updated: %ENV_FILE%
+)
 echo.
 pause
 exit /b 0

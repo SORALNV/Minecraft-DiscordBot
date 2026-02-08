@@ -1,8 +1,8 @@
 # Minecraft Discord Bot
 
-Minecraft サーバーを Discord から確認・操作する Bot です。
+Minecraft server control bot for Discord.
 
-## ディレクトリ構成
+## Directory Layout
 ```text
 <server_root>/
   bluemap/ (optional)
@@ -19,76 +19,99 @@ Minecraft サーバーを Discord から確認・操作する Bot です。
     .env.sample
     .env
     requirements.txt
-    <CLIENT_MODS>.zip   (MODS_COMMAND=direct の場合)
+    <CLIENT_MODS>.zip   (when MODS_COMMAND=direct)
 ```
 
-## インストール
+## Install
 ```bat
 cd /d <server_root>\bots
 python -m pip install -r requirements.txt
 ```
 
-## `.env` の作成方法A（エディター不要）
-`setup_env.bat` を実行すると、対話形式で `.env` を作成・更新できます。
+## `.env` Method A (No Editor)
+Run `setup_env.bat` to create or update `.env` interactively.
 
 ```bat
 cd /d <server_root>\bots
 setup_env.bat
 ```
 
-### `setup_env.bat` の入力項目
-| キー | 説明 |
+### `setup_env.bat` Input Fields
+
+#### 1) Discord
+| Key | Description |
 |---|---|
-| `DISCORD_TOKEN` | Discord Bot のトークン（必須） |
-| `DISCORD_CHANNEL_ID` | コントロールパネルを送るチャンネルID |
-| `BOT_LOG_CHANNEL_ID` | Botログ送信用チャンネルID（`0` で無効） |
-| `RCON_HOST` | RCON 接続先ホスト |
-| `RCON_PORT` | RCON ポート |
-| `RCON_PASSWORD` | `server.properties` の `rcon.password` |
-| `RESTART_COMMAND` | サーバー起動用 `.bat` のパス（絶対パス or サーバールート基準の相対パス） |
-| `MINECRAFT_PORT` | 表示・監視に使う Minecraft ポート |
-| `MINECRAFT_TYPE` | サーバー種別（例: Forge/Fabric/Vanilla） |
-| `MINECRAFT_VER` | サーバーバージョン（例: `1.20.1`） |
-| `MINECRAFT_IP` | 表示用アドレス |
-| `MODS_COMMAND` | `/mods` の動作モード（`false` / `direct` / `url`） |
-| `CLIENT_MODS` | `MODS_COMMAND=direct` のときのみ使用。`bots` 配下の ZIP 名（拡張子なし可） |
-| `MODS_URL` | `MODS_COMMAND=url` のときのみ使用。配布URL |
-| `BLUEMAP_URL` | BlueMap ボタンのリンク先。空欄なら BlueMap ボタン非表示 |
+| `DISCORD_TOKEN` | Discord bot token (required) |
+| `DISCORD_CHANNEL_ID` | Channel ID where control panel is posted |
+| `BOT_LOG_CHANNEL_ID` | Bot log channel ID (`0` to disable) |
 
-補足:
-- `setup_env.bat` は最後に `.env` を直接更新します（`.env.bak` は作成しません）。
-- `/mods` はモード選択に応じて入力項目が切り替わります。
+#### 2) RCON and Restart
+| Key | Description |
+|---|---|
+| `RCON_HOST` | RCON host |
+| `RCON_PORT` | RCON port |
+| `RCON_PASSWORD` | RCON password from `server.properties` |
+| `RESTART_COMMAND` | Path to server start `.bat` (absolute path or relative from server root) |
 
-## `.env` の作成方法B（エディターを使う）
-`.env.sample` をコピーして `.env` に名前変更し、値を編集して使います。
+#### 3) Minecraft Info Display
+| Key | Description |
+|---|---|
+| `MINECRAFT_PORT` | Minecraft game port for status lookup |
+| `MINECRAFT_TYPE` | Server type (example: Forge / Fabric / Vanilla) |
+| `MINECRAFT_VER` | Server version (example: `1.20.1`) |
+| `MINECRAFT_IP` | Address shown in control panel |
+
+#### 4) `/mods` Command
+| Key | Description |
+|---|---|
+| `MODS_COMMAND` | `/mods` mode: `false` / `direct` / `url` |
+| `CLIENT_MODS` | Used only when `MODS_COMMAND=direct`; zip name in `bots` folder |
+| `MODS_URL` | Used only when `MODS_COMMAND=url`; download URL |
+
+`/mods` mode behavior:
+- `false`: disable `/mods`
+- `direct`: send local zip file
+- `url`: send URL text
+
+#### 5) BlueMap
+| Key | Description |
+|---|---|
+| `BLUEMAP_URL` | BlueMap link URL; button is hidden when empty |
+
+Notes:
+- `setup_env.bat` updates `.env` directly (does not create `.env.bak`).
+- `/mods` input questions change based on selected mode.
+
+## `.env` Method B (Use an Editor)
+Copy `.env.sample` to `.env`, rename it, then edit values.
 
 ```bat
 cd /d <server_root>\bots
 copy .env.sample .env
 ```
 
-PowerShell の場合:
+PowerShell:
 
 ```powershell
 Copy-Item .env.sample .env
 ```
 
-## RCON 設定（サーバー側）
-`server.properties` で以下を設定してください。
+## RCON Server Settings
+Set the following in `server.properties`:
 
 - `enable-rcon=true`
-- `rcon.port` と `rcon.password` を `.env` と一致させる
+- `rcon.port` and `rcon.password` must match `.env`
 
-## 起動
+## Start Bot
 ```bat
 cd /d <server_root>\bots
 start_bot.bat
 ```
 
-`.env` が無い場合、`start_bot.bat` は `setup_env.bat` を自動で起動します。
+If `.env` does not exist, `start_bot.bat` starts `setup_env.bat` automatically.
 
-## `/mods` direct モードの ZIP 配置
-`.env` が `CLIENT_MODS=client_mods` の場合、以下に ZIP を置きます。
+## `/mods` Direct Mode Zip Location
+If `.env` has `CLIENT_MODS=client_mods`, place this file:
 
 ```text
 <server_root>/bots/client_mods.zip
