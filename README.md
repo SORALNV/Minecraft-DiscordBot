@@ -2,6 +2,10 @@
 
 Minecraft server control bot for Discord.
 
+Languages:
+- English: `README.md`
+- Japanese: `README.ja.md`
+
 ## Directory Layout
 ```text
 <server_root>/
