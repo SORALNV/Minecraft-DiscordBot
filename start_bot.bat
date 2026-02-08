@@ -1,4 +1,4 @@
 @echo off
 cd /d "%~dp0"
-python botprogram.py
+python MinecraftDiscordBot.py
 pause
