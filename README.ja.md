@@ -1,3 +1,5 @@
+[English](./README.en.md) | [日本語](./README.ja.md)
+
 # Minecraft Discord Bot
 
 Discord から Minecraft サーバーを操作・監視する Bot です。

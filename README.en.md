@@ -1,3 +1,6 @@
+[English](./README.en.md) | [日本語](./README.ja.md)
+
+
 # Minecraft Discord Bot
 
 Minecraft server control bot for Discord.
