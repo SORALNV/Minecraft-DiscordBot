@@ -13,7 +13,7 @@ Languages:
 - Slash command `/control` (admin only): posts the Minecraft control panel message.
 - Slash command `/mods`: behavior is selected by `MODS_COMMAND`.
 - `/mods=false`: command is disabled.
-- `/mods=direct`: sends `bots/<CLIENT_MODS>.zip`.
+- `/mods=direct`: sends `bots/<CLIENT_MODS_DIRECTORY>.zip`.
 - `/mods=url`: sends `MODS_URL`.
 - Control panel button `Status`: shows online/offline, player list, CPU usage, memory usage.
 - Control panel button `Set Morning`: sends RCON commands `/time set 300t` and `/weather clear`.
@@ -31,7 +31,7 @@ Languages:
 | `Set Morning` button | Press `Set Morning` and confirm time/weather changed | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD` |
 | `Restart` button | Press `Restart` with zero players, confirm server restarts | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD`, `RESTART_COMMAND` |
 | `/mods` disabled mode | Set `MODS_COMMAND=false`, run `/mods`, confirm disabled message | `MODS_COMMAND` |
-| `/mods` direct mode | Set `MODS_COMMAND=direct`, set `CLIENT_MODS`, place zip, run `/mods` | `MODS_COMMAND`, `CLIENT_MODS` |
+| `/mods` direct mode | Set `MODS_COMMAND=direct`, set `CLIENT_MODS_DIRECTORY`, place zip, run `/mods` | `MODS_COMMAND`, `CLIENT_MODS_DIRECTORY` |
 | `/mods` URL mode | Set `MODS_COMMAND=url`, set `MODS_URL`, run `/mods` | `MODS_COMMAND`, `MODS_URL` |
 | BlueMap button | Set `BLUEMAP_URL`, run `/control`, confirm BlueMap button is shown | `BLUEMAP_URL` |
 | Bot operation logs | Set `BOT_LOG_CHANNEL_ID`, perform button action, confirm log message | `BOT_LOG_CHANNEL_ID` |
@@ -60,7 +60,7 @@ Languages:
     .env.sample
     .env
     requirements.txt
-    <CLIENT_MODS>.zip   (when MODS_COMMAND=direct)
+    <CLIENT_MODS_DIRECTORY>.zip   (when MODS_COMMAND=direct)
 ```
 
 ## Install
@@ -83,7 +83,7 @@ setup_env.bat
 | Key | Description |
 |---|---|
 | `DISCORD_TOKEN` | Discord bot token (required) |
-| `DISCORD_CHANNEL_ID` | Channel ID where control panel is posted |
+| `DISCORD_CHANNEL_ID` | Channel ID where control panel is posted (required, must be greater than 0) |
 | `BOT_LOG_CHANNEL_ID` | Bot log channel ID (`0` to disable) |
 
 #### 2) RCON and Restart
@@ -106,7 +106,7 @@ setup_env.bat
 | Key | Description |
 |---|---|
 | `MODS_COMMAND` | `/mods` mode: `false` / `direct` / `url` |
-| `CLIENT_MODS` | Used only when `MODS_COMMAND=direct`; zip name in `bots` folder |
+| `CLIENT_MODS_DIRECTORY` | Used only when `MODS_COMMAND=direct`; zip name or path in `bots` folder |
 | `MODS_URL` | Used only when `MODS_COMMAND=url`; download URL |
 
 `/mods` mode behavior:
@@ -152,7 +152,7 @@ start_bot.bat
 If `.env` does not exist, `start_bot.bat` starts `setup_env.bat` automatically.
 
 ## `/mods` Direct Mode Zip Location
-If `.env` has `CLIENT_MODS=client_mods`, place this file:
+If `.env` has `CLIENT_MODS_DIRECTORY=client_mods`, place this file:
 
 ```text
 <server_root>/bots/client_mods.zip

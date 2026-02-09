@@ -32,12 +32,28 @@ def env_int(name: str, default: int) -> int:
         return default
 
 
+def env_required_int(name: str) -> int:
+    raw = os.getenv(name)
+    if raw is None or raw.strip() == "":
+        print(f"[ERROR] {name} is missing in .env")
+        raise SystemExit(1)
+    try:
+        value = int(raw)
+    except ValueError:
+        print(f"[ERROR] {name} must be an integer: {raw!r}")
+        raise SystemExit(1)
+    if value <= 0:
+        print(f"[ERROR] {name} must be greater than 0.")
+        raise SystemExit(1)
+    return value
+
+
 TOKEN = os.getenv("DISCORD_TOKEN")
 if not TOKEN:
     print("[ERROR] DISCORD_TOKEN is missing in .env")
     raise SystemExit(1)
 
-CHANNEL_ID = env_int("DISCORD_CHANNEL_ID", 0)
+CHANNEL_ID = env_required_int("DISCORD_CHANNEL_ID")
 LOG_CHANNEL_ID = env_int("BOT_LOG_CHANNEL_ID", 0)
 RESTART_COMMAND = os.getenv("RESTART_COMMAND", "").strip()
 RCON_PASSWORD = os.getenv("RCON_PASSWORD", "")
@@ -48,7 +64,7 @@ MINECRAFT_VER = os.getenv("MINECRAFT_VER", "Unknown")
 MINECRAFT_IP = os.getenv("MINECRAFT_IP", "Unknown")
 BLUEMAP_URL = os.getenv("BLUEMAP_URL", "").strip()
 MODS_COMMAND = os.getenv("MODS_COMMAND", "").strip().lower()
-CLIENT_MODS = os.getenv("CLIENT_MODS", "").strip()
+CLIENT_MODS_DIRECTORY = os.getenv("CLIENT_MODS_DIRECTORY", "").strip()
 MODS_URL = os.getenv("MODS_URL", "").strip()
 MINECRAFT_TYPE = os.getenv("MINECRAFT_TYPE", "Unknown")
 
@@ -59,9 +75,9 @@ bot = commands.Bot(command_prefix="/", intents=intents, activity=discord.Game("S
 
 
 def resolve_client_mods_path() -> Path | None:
-    if not CLIENT_MODS:
+    if not CLIENT_MODS_DIRECTORY:
         return None
-    p = Path(CLIENT_MODS)
+    p = Path(CLIENT_MODS_DIRECTORY)
     if p.suffix.lower() != ".zip":
         p = p.with_suffix(".zip")
     if not p.is_absolute():
@@ -91,7 +107,7 @@ async def send_mods(interaction: discord.Interaction):
         if MODS_COMMAND == "direct":
             path = resolve_client_mods_path()
             if not path:
-                await interaction.followup.send("CLIENT_MODS is not set in .env", ephemeral=True)
+                await interaction.followup.send("CLIENT_MODS_DIRECTORY is not set in .env", ephemeral=True)
                 return
             if not path.exists():
                 await interaction.followup.send(f"Mods file not found: {path}", ephemeral=True)

@@ -18,8 +18,8 @@ echo.
 echo [1/5] Discord settings
 echo DISCORD_TOKEN: Bot token from Discord Developer Portal. Required.
 call :prompt_required DISCORD_TOKEN "DISCORD_TOKEN"
-echo DISCORD_CHANNEL_ID: Channel ID where the control panel message is posted.
-call :prompt_int_default DISCORD_CHANNEL_ID "DISCORD_CHANNEL_ID" "0"
+echo DISCORD_CHANNEL_ID: Channel ID where the control panel message is posted. Required.
+call :prompt_int_required_positive DISCORD_CHANNEL_ID "DISCORD_CHANNEL_ID"
 echo BOT_LOG_CHANNEL_ID: Channel ID for bot logs. Set 0 to disable.
 call :prompt_int_default BOT_LOG_CHANNEL_ID "BOT_LOG_CHANNEL_ID" "0"
 echo.
@@ -56,22 +56,22 @@ choice /c 123 /n /m "Select 1-3: "
 if errorlevel 3 goto mods_url
 if errorlevel 2 goto mods_direct
 set "MODS_COMMAND=false"
-set "CLIENT_MODS="
+set "CLIENT_MODS_DIRECTORY="
 set "MODS_URL="
 goto mods_done
 
 :mods_direct
 set "MODS_COMMAND=direct"
-echo CLIENT_MODS: zip name for /mods direct mode.
+echo CLIENT_MODS_DIRECTORY: zip name or path for /mods direct mode.
 echo Example: client_mods or client_mods.zip
 echo File location: bots\client_mods.zip
-call :prompt_default CLIENT_MODS "CLIENT_MODS" "client_mods"
+call :prompt_default CLIENT_MODS_DIRECTORY "CLIENT_MODS_DIRECTORY" "client_mods"
 set "MODS_URL="
 goto mods_done
 
 :mods_url
 set "MODS_COMMAND=url"
-set "CLIENT_MODS="
+set "CLIENT_MODS_DIRECTORY="
 echo MODS_URL: URL that will be sent by /mods.
 call :prompt_required MODS_URL "MODS_URL"
 
@@ -94,7 +94,7 @@ call :write_kv DISCORD_TOKEN "%DISCORD_TOKEN%"
 call :write_kv DISCORD_CHANNEL_ID "%DISCORD_CHANNEL_ID%"
 call :write_kv BOT_LOG_CHANNEL_ID "%BOT_LOG_CHANNEL_ID%"
 call :write_kv MODS_COMMAND "%MODS_COMMAND%"
-call :write_kv CLIENT_MODS "%CLIENT_MODS%"
+call :write_kv CLIENT_MODS_DIRECTORY "%CLIENT_MODS_DIRECTORY%"
 call :write_kv MODS_URL "%MODS_URL%"
 call :write_kv RCON_HOST "%RCON_HOST%"
 call :write_kv RCON_PORT "%RCON_PORT%"
@@ -149,6 +149,27 @@ for /f "delims=0123456789" %%A in ("%TMP_VALUE%") do set "NON_NUM=%%A"
 if defined NON_NUM (
     echo [ERROR] Digits only.
     goto prompt_int_default_retry
+)
+exit /b 0
+
+:prompt_int_required_positive
+set "%~1="
+:prompt_int_required_positive_retry
+set /p "%~1=%~2: "
+if not defined %~1 (
+    echo [ERROR] This value is required.
+    goto prompt_int_required_positive_retry
+)
+set "NON_NUM="
+call set "TMP_VALUE=%%%~1%%"
+for /f "delims=0123456789" %%A in ("%TMP_VALUE%") do set "NON_NUM=%%A"
+if defined NON_NUM (
+    echo [ERROR] Digits only.
+    goto prompt_int_required_positive_retry
+)
+if "%TMP_VALUE%"=="0" (
+    echo [ERROR] Value must be greater than 0.
+    goto prompt_int_required_positive_retry
 )
 exit /b 0
 

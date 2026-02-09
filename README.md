@@ -9,11 +9,11 @@ Discord から Minecraft サーバーを操作・監視する Bot です。
 - 日本語: `README.ja.md`
 
 ## BOTの機能
-- スラッシュコマンド `/control`（管理者のみ）: Minecraft のコントロールパネルを投稿します。
-- スラッシュコマンド `/mods`: `MODS_COMMAND` の設定で動作が切り替わります。
-- `MODS_COMMAND=false`: `/mods` を無効化します。
-- `MODS_COMMAND=direct`: `bots/<CLIENT_MODS>.zip` を送信します。
-- `MODS_COMMAND=url`: `MODS_URL` を送信します。
+- コマンド `/control`（管理者のみ）: Minecraft のコントロールパネルを投稿します。
+- コマンド `/mods`: MODファイルの共有機能です。`MODS_COMMAND` の設定で動作が切り替わります。無効化、圧縮されたMODファイル直接送付、Gigafile便などのサービスURLを送付を選択可能。（直接ファイル送付機能は容量によっては使用できません）
+- - `MODS_COMMAND=false`: `/mods` を無効化します。
+- - `MODS_COMMAND=direct`: `CLIENT_MODS_DIRECTORY = ` に記述された場所のファイルを送信します。zipファイルの
+- - `MODS_COMMAND=url`: `MODS_URL = ` に記述されたURLを送信します。
 - コントロールパネル `Status` ボタン: サーバーのオンライン状態、プレイヤー一覧、CPU使用率、メモリ使用率を表示します。
 - コントロールパネル `Set Morning` ボタン: RCON で `/time set 300t` と `/weather clear` を実行します。
 - コントロールパネル `Restart` ボタン: 事前チェック、確認UI、同時実行ロック、RCON `/stop`、`RESTART_COMMAND` 実行の順で安全に再起動します。
@@ -30,7 +30,7 @@ Discord から Minecraft サーバーを操作・監視する Bot です。
 | `Set Morning` ボタン | `Set Morning` を押し、時間と天候の変更を確認 | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD` |
 | `Restart` ボタン | プレイヤー0人で `Restart` 実行、再起動を確認 | `RCON_HOST`, `RCON_PORT`, `RCON_PASSWORD`, `RESTART_COMMAND` |
 | `/mods` 無効モード | `MODS_COMMAND=false` で `/mods` 実行、無効メッセージを確認 | `MODS_COMMAND` |
-| `/mods` direct モード | `MODS_COMMAND=direct` と `CLIENT_MODS` 設定、ZIP配置後に `/mods` 実行 | `MODS_COMMAND`, `CLIENT_MODS` |
+| `/mods` direct モード | `MODS_COMMAND=direct` と `CLIENT_MODS_DIRECTORY` 設定、ZIP配置後に `/mods` 実行 | `MODS_COMMAND`, `CLIENT_MODS_DIRECTORY` |
 | `/mods` url モード | `MODS_COMMAND=url` と `MODS_URL` 設定後に `/mods` 実行 | `MODS_COMMAND`, `MODS_URL` |
 | BlueMap ボタン | `BLUEMAP_URL` を設定し `/control` 実行、BlueMap ボタン表示を確認 | `BLUEMAP_URL` |
 | 操作ログ送信 | `BOT_LOG_CHANNEL_ID` 設定後に操作し、ログ投稿を確認 | `BOT_LOG_CHANNEL_ID` |
@@ -59,7 +59,7 @@ Discord から Minecraft サーバーを操作・監視する Bot です。
     .env.sample
     .env
     requirements.txt
-    <CLIENT_MODS>.zip   (MODS_COMMAND=direct の場合)
+    <CLIENT_MODS_DIRECTORY>.zip   (MODS_COMMAND=direct の場合)
 ```
 
 ## インストール
@@ -82,7 +82,7 @@ setup_env.bat
 | キー | 説明 |
 |---|---|
 | `DISCORD_TOKEN` | Discord Bot トークン（必須） |
-| `DISCORD_CHANNEL_ID` | コントロールパネルを投稿するチャンネルID |
+| `DISCORD_CHANNEL_ID` | コントロールパネルを投稿するチャンネルID（必須・0より大きい値） |
 | `BOT_LOG_CHANNEL_ID` | Bot ログ出力先チャンネルID（`0` で無効） |
 
 #### 2) RCON と再起動
@@ -105,7 +105,7 @@ setup_env.bat
 | キー | 説明 |
 |---|---|
 | `MODS_COMMAND` | `/mods` のモード: `false` / `direct` / `url` |
-| `CLIENT_MODS` | `MODS_COMMAND=direct` のときのみ使用。`bots` フォルダ内 ZIP 名 |
+| `CLIENT_MODS_DIRECTORY` | `MODS_COMMAND=direct` のときのみ使用。`bots` フォルダ内 ZIP 名 |
 | `MODS_URL` | `MODS_COMMAND=url` のときのみ使用。配布URL |
 
 `/mods` モードの挙動:
@@ -151,7 +151,7 @@ start_bot.bat
 `.env` が存在しない場合、`start_bot.bat` が `setup_env.bat` を自動起動します。
 
 ## `/mods` direct モード時の ZIP 配置
-`.env` が `CLIENT_MODS=client_mods` の場合、次の場所に配置します。
+`.env` が `CLIENT_MODS_DIRECTORY=client_mods` の場合、次の場所に配置します。
 
 ```text
 <server_root>/bots/client_mods.zip
