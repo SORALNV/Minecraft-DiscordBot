@@ -2,25 +2,26 @@
 
 # Minecraft Discord Bot
 
-Discord から Minecraft サーバーを操作・監視する Bot です。
-
-言語:
-- English: `README.md`
-- 日本語: `README.ja.md`
-
 ## BOTの機能
-- コマンド `/control`（管理者のみ）: Minecraft のコントロールパネルを投稿します。
-- コマンド `/mods`: MODファイルの共有機能です。`MODS_COMMAND` の設定で動作が切り替わります。無効化、圧縮されたMODファイル直接送付、Gigafile便などのサービスURLを送付を選択可能。（直接ファイル送付機能は容量によっては使用できません）
-- - `MODS_COMMAND=false`: `/mods` を無効化します。
-- - `MODS_COMMAND=direct`: `CLIENT_MODS_DIRECTORY = ` に記述された場所のファイルを送信します。zipファイルの
-- - `MODS_COMMAND=url`: `MODS_URL = ` に記述されたURLを送信します。
-- コントロールパネル `Status` ボタン: サーバーのオンライン状態、プレイヤー一覧、CPU使用率、メモリ使用率を表示します。
-- コントロールパネル `Set Morning` ボタン: RCON で `/time set 300t` と `/weather clear` を実行します。
-- コントロールパネル `Restart` ボタン: 事前チェック、確認UI、同時実行ロック、RCON `/stop`、`RESTART_COMMAND` 実行の順で安全に再起動します。
-- コントロールパネル `BlueMap` ボタン: `BLUEMAP_URL` が設定されている場合のみ表示します。
 - Bot のプレゼンスは60秒ごとに更新され、プレイヤー数または `Offline` を表示します。
 - `BOT_LOG_CHANNEL_ID` が設定されている場合、操作ログを送信します。
 - `.env` が無い場合は `start_bot.bat` から `setup_env.bat` を自動起動します。
+
+__コマンド__
+- `/control`（管理者のみ）: Minecraft のコントロールパネルを投稿します。
+- `/mods`: MODファイルの共有機能です。`MODS_COMMAND` の設定で動作が切り替わります。無効化、圧縮されたMODファイル直接送付、Gigafile便などのサービスURLを送付を選択可能。（直接ファイル送付機能は容量によっては使用できません）
+```
+`MODS_COMMAND=false`: `/mods` を無効化します。
+`MODS_COMMAND=direct`: `CLIENT_MODS_DIRECTORY = ` に記述された場所のファイルを送信します。zipファイルの
+`MODS_COMMAND=url`: `MODS_URL = ` に記述されたURLを送信します。
+```
+__コントロールパネル__
+- `Status` ボタン: サーバーのオンライン状態、プレイヤー一覧、CPU使用率、メモリ使用率を表示します。
+- `Set Morning` ボタン: RCON で `/time set 300t` と `/weather clear` を実行します。
+- `Restart` ボタン: 事前チェック、確認UI、同時実行ロック、RCON `/stop`、`RESTART_COMMAND` 実行の順で安全に再起動します。
+- `BlueMap` ボタン: `BLUEMAP_URL` が設定されている場合のみ表示します。
+
+---
 
 ## 機能確認マトリクス
 | 機能 | かんたんな確認方法 | 必要な `.env` キー |
